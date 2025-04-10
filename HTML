@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Feliz Aniversário, Nini!</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.js"></script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background-color: #ffccff;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      let confetes = [];
+      let baloes = [];
+      let mensagens = [];
+      let mensagemAtual = 0;
+      let tempoMensagem = 0;
+      let tempoTroca = 600; // frames
+      let showJin = false;
+      let jinImg;
+
+      function preload() {
+        // Coloque aqui a URL ou caminho da imagem do Jin
+        jinImg = loadImage("https://i.imgur.com/rQ1bm2S.jpeg"); // Substitua por outra se quiser
+      }
+
+      function setup() {
+        createCanvas(windowWidth, windowHeight);
+        textAlign(CENTER, CENTER);
+        textSize(30);
+        fill(255);
+
+        mensagens = [
+          "Feliz aniversário, Nini!",
+          "Você é incrível, e eu sou tão sortudo por ter você em minha vida, afs. \nSeus olhinhos brilhantes e seu sorriso perfeito iluminam qualquer dia.",
+          "Sua personalidade é incrível, eu já te disse isso?\nEu me orgulho cada dia mais da mulher incrível que você vem se tornando.",
+          "Eu amo ver você crescendo, meu deus! Parece que foi ontem que nos conhecemos.",
+          "Agora indo para parte clichê!\nDesejo que este novo ano de vida seja repleto de alegria, felicidade e realizações...",
+          "Dios mio, 17 anos!!!! Feliz aniversário, gatinha!",
+          "Você é uma garota incrível e meu amor por você é muito relativo!",
+          "Não posso dizer apenas um 'te amo', essa palavra é pequena demais...",
+          "'Eu te amo daqui da terra até a lua' – bem clichê, né? Mas tem um belo significado.",
+          "Fico por aqui... Que nossa amizade dure o suficiente pra irmos ver Yoongi e Jin ao vivo juntas!",
+          "Beijinhos do seu jiji",
+          "Presente final: Seu Jin!"
+        ];
+
+        for (let i = 0; i < 150; i++) {
+          confetes.push(new Confete());
+        }
+
+        for (let i = 0; i < 12; i++) {
+          baloes.push(new Balao(random(width), height + random(100)));
+        }
+      }
+
+      function draw() {
+        background('#ffccff');
+
+        if (!showJin) {
+          // Texto animado
+          fill('#ff1493');
+          stroke(255);
+          strokeWeight(3);
+          textSize(30);
+          textWrap(WORD);
+          text(mensagens[mensagemAtual], width / 2, height / 2, width * 0.8);
+
+          for (let c of confetes) {
+            c.update();
+            c.show();
+          }
+
+          for (let b of baloes) {
+            b.update();
+            b.show();
+          }
+
+          tempoMensagem++;
+          if (tempoMensagem > tempoTroca) {
+            tempoMensagem = 0;
+            mensagemAtual++;
+            if (mensagemAtual >= mensagens.length - 1) {
+              showJin = true;
+            }
+          }
+        } else {
+          // Exibe imagem do Jin
+          background('#fff0f5');
+          imageMode(CENTER);
+          image(jinImg, width / 2, height / 2, min(width * 0.8, 600), min(height * 0.8, 800));
+          textSize(40);
+          fill('#ff69b4');
+          stroke(255);
+          text("Te amo até a lua! — do seu jiji", width / 2, height - 80);
+        }
+      }
+
+      function mousePressed() {
+        for (let b of baloes) {
+          if (dist(mouseX, mouseY, b.x, b.y) < 30) {
+            b.y = height + random(100);
+          }
+        }
+      }
+
+      class Confete {
+        constructor() {
+          this.x = random(width);
+          this.y = random(-height, 0);
+          this.size = random(5, 10);
+          this.speed = random(1, 3);
+          this.color = color(random(255), random(255), random(255));
+        }
+
+        update() {
+          this.y += this.speed;
+          if (this.y > height) {
+            this.y = random(-100, 0);
+            this.x = random(width);
+          }
+        }
+
+        show() {
+          fill(this.color);
+          ellipse(this.x, this.y, this.size);
+        }
+      }
+
+      class Balao {
+        constructor(x, y) {
+          this.x = x;
+          this.y = y;
+          this.color = color(random(200, 255), random(100, 200), random(200, 255));
+        }
+
+        update() {
+          this.y -= 1;
+          if (this.y < -100) {
+            this.y = height + random(100);
+          }
+        }
+
+        show() {
+          fill(this.color);
+          stroke(0);
+          ellipse(this.x, this.y, 50, 70);
+          line(this.x, this.y + 35, this.x, this.y + 70);
+        }
+      }
+
+      function windowResized() {
+        resizeCanvas(windowWidth, windowHeight);
+      }
+    </script>
+  </body>
+</html>
